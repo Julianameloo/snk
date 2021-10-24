@@ -104,7 +104,7 @@ jobs:
         with:
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: |
-            Julianameloo/snk:latest
-            Julianameloo/snk:${{ github.sha }}
+            julianamelo/snk:latest
+            julianamelo/snk:${{ github.sha }}
           file: packages/action/Dockerfile
           context: packages/action
