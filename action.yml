@@ -4,7 +4,7 @@ author: "platane"
 
 runs:
   using: "docker"
-  image: "docker://platane/snk:latest"
+  image: "docker://Julianameloo/snk:latest"
 
 inputs:
   github_user_name:
