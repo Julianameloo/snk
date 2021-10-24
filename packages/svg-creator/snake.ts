@@ -131,6 +131,7 @@ export const createSnake = (
               }
 
               return `${percent(p.t)}%{${transform(p, p2[pi].x, p2[pi].y)}}`;
+
             } else {
 
               return `${percent(valuePer)}%{${transform(p, p2[pi].x, p2[pi].y)}}
