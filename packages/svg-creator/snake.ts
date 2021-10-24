@@ -55,7 +55,8 @@ export const createSnake = (
 
   var rotate = 0;
 
-  const transform = ({ x: oldX, y: oldY }: Point, x: number, y: number) => {
+  const transform = ({ x: oldX, y: oldY }: Point) => {
+
     return `transform-box: fill-box;
             transform-origin: center;
             transform :translate(${(oldX * sizeCell)}px,${(oldY * sizeCell)}px) rotate(${rotate}deg);`;
@@ -130,18 +131,18 @@ export const createSnake = (
                 rotate = -270;
               }
 
-              return `${percent(p.t)}%{${transform(p, p2[pi].x, p2[pi].y)}}`;
+              return `${percent(p.t)}%{${transform(p)}}`;
 
             } else {
 
-              return `${percent(valuePer)}%{${transform(p, p2[pi].x, p2[pi].y)}}
+              return `${percent(valuePer)}%{${transform(p)}}
                       ${percent(p.t)}%{${transformR(p, p2[pi].x, p2[pi].y)}}`;
             }
           })
           .join("") +
         "}",
 
-        `.s.${id}{${transform(positions[0], positions[0].x, positions[0].y)};animation-name: ${animationName}}`,
+        `.s.${id}{${transform(positions[0])};animation-name: ${animationName}}`,
       ];
     }),
   ].flat();
