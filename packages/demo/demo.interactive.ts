@@ -191,8 +191,8 @@ const createViewer = ({
     const w = window.open("")!;
     w.document.write(
       `<a href="${svgImageUri}" download="github-user-contribution.svg">` +
-      svgString +
-      "<a/>"
+        svgString +
+        "<a/>"
     );
     e.preventDefault();
   });

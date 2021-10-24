@@ -28,7 +28,7 @@ export const createSnake = (
 
   for (const snake of chain) {
     const cells = snakeToCells(snake);
-    for (let i = cells.length; i--;) snakeParts[i].push(cells[i]);
+    for (let i = cells.length; i--; ) snakeParts[i].push(cells[i]);
   }
 
   const svgElements = snakeParts.map((_, i, { length }) => {
@@ -58,8 +58,9 @@ export const createSnake = (
   const transform = ({ x: oldX, y: oldY }: Point) => {
     return `transform-box: fill-box;
             transform-origin: center;
-            transform :translate(${oldX * sizeCell}px,${oldY * sizeCell
-      }px) rotate(${rotate}deg);`;
+            transform :translate(${oldX * sizeCell}px,${
+      oldY * sizeCell
+    }px) rotate(${rotate}deg);`;
   };
 
   const transformR = ({ x: oldX, y: oldY }: Point, x: number, y: number) => {
@@ -75,8 +76,9 @@ export const createSnake = (
 
     return `transform-box: fill-box;
             transform-origin: center;
-            transform:translate(${oldX * sizeCell}px,${oldY * sizeCell
-      }px) rotate(${rotate}deg);`;
+            transform:translate(${oldX * sizeCell}px,${
+      oldY * sizeCell
+    }px) rotate(${rotate}deg);`;
   };
 
   const styles = [
@@ -110,35 +112,35 @@ export const createSnake = (
 
       return [
         `@keyframes ${animationName} { ` +
-        removeInterpolatedPositions(
-          positions.map((tr, i, { length }) => ({ ...tr, t: i / length, i }))
-        )
-          .map((p, i) => {
-            var pi = i + 1;
+          removeInterpolatedPositions(
+            positions.map((tr, i, { length }) => ({ ...tr, t: i / length, i }))
+          )
+            .map((p, i) => {
+              var pi = i + 1;
 
-            if (pi === p2.length) {
-              pi = 0;
-            }
-
-            var valuePer = p.t - p.t * 0.001;
-
-            if (i === 0) {
-              if (p.x > p2[pi].x && p.y === p2[pi].y) {
-                rotate = -180;
-              } else if (p.x === p2[pi].x && p.y > p2[pi].y) {
-                rotate = -90;
-              } else if (p.x === p2[pi].x && p.y < p2[pi].y) {
-                rotate = -270;
+              if (pi === p2.length) {
+                pi = 0;
               }
 
-              return `${percent(p.t)}%{${transform(p)}}`;
-            } else {
-              return `${percent(valuePer)}%{${transform(p)}}
+              var valuePer = p.t - p.t * 0.001;
+
+              if (i === 0) {
+                if (p.x > p2[pi].x && p.y === p2[pi].y) {
+                  rotate = -180;
+                } else if (p.x === p2[pi].x && p.y > p2[pi].y) {
+                  rotate = -90;
+                } else if (p.x === p2[pi].x && p.y < p2[pi].y) {
+                  rotate = -270;
+                }
+
+                return `${percent(p.t)}%{${transform(p)}}`;
+              } else {
+                return `${percent(valuePer)}%{${transform(p)}}
                       ${percent(p.t)}%{${transformR(p, p2[pi].x, p2[pi].y)}}`;
-            }
-          })
-          .join("") +
-        "}",
+              }
+            })
+            .join("") +
+          "}",
 
         `.s.${id}{${transform(positions[0])};animation-name: ${animationName}}`,
       ];
