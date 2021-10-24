@@ -3,7 +3,7 @@
   "description": "Generates a snake game from a github user contributions grid",
   "version": "1.0.0",
   "private": true,
-  "repository": "github:platane/snk",
+  "repository": "https://github.com/github:platane/snk",
   "devDependencies": {
     "@types/jest": "27.0.2",
     "@types/node": "16.0.0",
@@ -22,5 +22,11 @@
     "dev:demo": "( cd packages/demo ; yarn dev )",
     "build:demo": "( cd packages/demo ; yarn build )",
     "build:action": "( cd packages/action ; yarn build )"
+  },
+  "main": "index.js",
+  "author": "Julianameloo <msjulianamelo@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^5.59.1"
   }
 }

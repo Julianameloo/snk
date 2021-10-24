@@ -2,7 +2,6 @@ import { getSnakeLength, snakeToCells } from "@snk/types/snake";
 import type { Snake } from "@snk/types/snake";
 import type { Color } from "@snk/types/grid";
 import type { Point } from "@snk/types/point";
-import { h } from "./utils";
 
 export type Options = {
   colorDots: Record<Color, string>;
@@ -29,7 +28,7 @@ export const createSnake = (
 
   for (const snake of chain) {
     const cells = snakeToCells(snake);
-    for (let i = cells.length; i--; ) snakeParts[i].push(cells[i]);
+    for (let i = cells.length; i--;) snakeParts[i].push(cells[i]);
   }
 
   const svgElements = snakeParts.map((_, i, { length }) => {
@@ -42,17 +41,16 @@ export const createSnake = (
 
     const m = (sizeCell - s) / 2;
 
-    const r = Math.min(4.5, (4 * s) / sizeDot);
-
-    return h("rect", {
-      class: `s s${i}`,
-      x: m.toFixed(1),
-      y: m.toFixed(1),
-      width: s.toFixed(1),
-      height: s.toFixed(1),
-      rx: r.toFixed(1),
-      ry: r.toFixed(1),
-    });
+    return `
+     <image 
+      class="s s0"
+      x="${m.toFixed(1)}"
+      y="${m.toFixed(1)}"
+      width="${s.toFixed(1)}"
+      height="${s.toFixed(1)}"
+      href="https://i.imgur.com/PxsPxvN.png"
+    />
+    `;
   });
 
   const transform = ({ x, y }: Point) =>
@@ -71,12 +69,12 @@ export const createSnake = (
 
       return [
         `@keyframes ${animationName} {` +
-          removeInterpolatedPositions(
-            positions.map((tr, i, { length }) => ({ ...tr, t: i / length }))
-          )
-            .map((p) => `${percent(p.t)}%{${transform(p)}}`)
-            .join("") +
-          "}",
+        removeInterpolatedPositions(
+          positions.map((tr, i, { length }) => ({ ...tr, t: i / length }))
+        )
+          .map((p) => `${percent(p.t)}%{${transform(p)}}`)
+          .join("") +
+        "}",
 
         `.s.${id}{${transform(positions[0])};animation-name: ${animationName}}`,
       ];
