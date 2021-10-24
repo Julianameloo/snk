@@ -56,14 +56,13 @@ export const createSnake = (
   var rotate = 0;
 
   const transform = ({ x: oldX, y: oldY }: Point) => {
-
     return `transform-box: fill-box;
             transform-origin: center;
-            transform :translate(${(oldX * sizeCell)}px,${(oldY * sizeCell)}px) rotate(${rotate}deg);`;
-  }
+            transform :translate(${oldX * sizeCell}px,${oldY * sizeCell
+      }px) rotate(${rotate}deg);`;
+  };
 
   const transformR = ({ x: oldX, y: oldY }: Point, x: number, y: number) => {
-
     if (oldX > x && oldY === y) {
       rotate = -180;
     } else if (oldX < x && oldY === y) {
@@ -76,8 +75,9 @@ export const createSnake = (
 
     return `transform-box: fill-box;
             transform-origin: center;
-            transform:translate(${(oldX * sizeCell)}px,${(oldY * sizeCell)}px) rotate(${rotate}deg);`;
-  }
+            transform:translate(${oldX * sizeCell}px,${oldY * sizeCell
+      }px) rotate(${rotate}deg);`;
+  };
 
   const styles = [
     `.s{ 
@@ -91,36 +91,36 @@ export const createSnake = (
       const animationName = id;
 
       interface PKeys {
-        x: number,
-        y: number,
-        i: number,
-        t: number
+        x: number;
+        y: number;
+        i: number;
+        t: number;
       }
       let p2 = removeInterpolatedPositions(
-        positions.map((tr, i, { length }) =>
-          ({ ...tr, t: i / length, i }))
-      ).map((p) => <PKeys>{
-        x: p.x,
-        y: p.y,
-        i: p.i,
-        t: p.t
-      });
+        positions.map((tr, i, { length }) => ({ ...tr, t: i / length, i }))
+      ).map(
+        (p) =>
+          <PKeys>{
+            x: p.x,
+            y: p.y,
+            i: p.i,
+            t: p.t,
+          }
+      );
 
       return [
         `@keyframes ${animationName} { ` +
         removeInterpolatedPositions(
-          positions.map((tr, i, { length }) =>
-            ({ ...tr, t: i / length, i }))
+          positions.map((tr, i, { length }) => ({ ...tr, t: i / length, i }))
         )
           .map((p, i) => {
             var pi = i + 1;
 
-            if (pi === (p2.length)) {
+            if (pi === p2.length) {
               pi = 0;
-
             }
 
-            var valuePer = (p.t) - (p.t * 0.001);
+            var valuePer = p.t - p.t * 0.001;
 
             if (i === 0) {
               if (p.x > p2[pi].x && p.y === p2[pi].y) {
@@ -132,9 +132,7 @@ export const createSnake = (
               }
 
               return `${percent(p.t)}%{${transform(p)}}`;
-
             } else {
-
               return `${percent(valuePer)}%{${transform(p)}}
                       ${percent(p.t)}%{${transformR(p, p2[pi].x, p2[pi].y)}}`;
             }
