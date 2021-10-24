@@ -15,11 +15,9 @@ export type Options = {
 
 const percent = (x: number) => (x * 100).toFixed(5);
 
-const lerp = (k: number, a: number, b: number) => (1 - k) * a + k * b;
-
 export const createSnake = (
   chain: Snake[],
-  { sizeCell, sizeDot }: Options,
+  { sizeCell }: Options,
   duration: number
 ) => {
   const snakeN = chain[0] ? getSnakeLength(chain[0]) : 0;
@@ -31,24 +29,12 @@ export const createSnake = (
     for (let i = cells.length; i--; ) snakeParts[i].push(cells[i]);
   }
 
-  const svgElements = snakeParts.map((_, i, { length }) => {
+  const svgElements = snakeParts.map((_) => {
     // compute snake part size
-    const dMin = sizeDot * 0.8;
-    const dMax = sizeCell * 0.9;
-    const iMax = Math.min(4, length);
-    const u = (1 - Math.min(i, iMax) / iMax) ** 2;
-    const s = lerp(u, dMin, dMax);
-
-    const m = (sizeCell - s) / 2;
-
     return `
-     <image 
-      class="s s0"
-      x="${m.toFixed(1)}"
-      y="${m.toFixed(1)}"
-      width="${s.toFixed(1)}"
-      height="${s.toFixed(1)}"
-      href="https://i.imgur.com/PxsPxvN.png"
+    <path 
+      class="s s0" 
+      d="M13.9449 9.71909C13.3621 11.2796 12.2563 12.5897 10.8158 13.4262C9.37534 14.2628 7.68938 14.574 6.04518 14.3068C4.40099 14.0396 2.9003 13.2106 1.79882 11.961C0.697333 10.7114 0.0632031 9.11856 0.00447601 7.45384C-0.0542511 5.78912 0.466059 4.15553 1.47675 2.83143C2.48744 1.50732 3.92598 0.574628 5.54726 0.192258C7.16854 -0.190112 8.87224 0.00150298 10.3681 0.734455C11.8639 1.46741 13.0593 2.69634 13.7507 4.21187L7.2 7.2L13.9449 9.71909Z" fill="#FFE737" stroke="#0C0B0B" stroke-width="2" fill-opacity="1"
     />
     `;
   });
@@ -84,7 +70,6 @@ export const createSnake = (
   const styles = [
     `.s{ 
       shape-rendering:geometricPrecision;
-      fill:var(--cs);
       animation: none linear ${duration}ms infinite;
     }`,
     ...snakeParts.map((positions, i) => {
