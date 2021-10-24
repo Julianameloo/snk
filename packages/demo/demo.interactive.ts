@@ -10,7 +10,7 @@ import {
   Options,
 } from "@snk/draw/drawWorld";
 import { userContributionToGrid } from "../action/userContributionToGrid";
-import { snake4 as snake } from "@snk/types/__fixtures__/snake";
+import { snake1 as snake } from "@snk/types/__fixtures__/snake";
 import { getPathToPose } from "@snk/solver/getPathToPose";
 import { createSvg } from "../svg-creator";
 
@@ -191,8 +191,8 @@ const createViewer = ({
     const w = window.open("")!;
     w.document.write(
       `<a href="${svgImageUri}" download="github-user-contribution.svg">` +
-        svgString +
-        "<a/>"
+      svgString +
+      "<a/>"
     );
     e.preventDefault();
   });
