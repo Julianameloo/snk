@@ -13,7 +13,7 @@ export type Options = {
   sizeBorderRadius: number;
 };
 
-const percent = (x: number) => (x * 100).toFixed(2);
+const percent = (x: number) => (x * 100).toFixed(5);
 
 const lerp = (k: number, a: number, b: number) => (1 - k) * a + k * b;
 
@@ -53,34 +53,97 @@ export const createSnake = (
     `;
   });
 
-  const transform = ({ x, y }: Point) =>
-    `transform:translate(${x * sizeCell}px,${y * sizeCell}px)`;
+  var rotate = 0;
+
+  const transform = ({ x: oldX, y: oldY }: Point, x: number, y: number) => {
+    return `transform-box: fill-box;
+            transform-origin: center;
+            transform :translate(${(oldX * sizeCell)}px,${(oldY * sizeCell)}px) rotate(${rotate}deg);`;
+  }
+
+  const transformR = ({ x: oldX, y: oldY }: Point, x: number, y: number) => {
+
+    if (oldX > x && oldY === y) {
+      rotate = -180;
+    } else if (oldX < x && oldY === y) {
+      rotate = 0;
+    } else if (oldX === x && oldY > y) {
+      rotate = -90;
+    } else if (oldX === x && oldY < y) {
+      rotate = -270;
+    }
+
+    return `transform-box: fill-box;
+            transform-origin: center;
+            transform:translate(${(oldX * sizeCell)}px,${(oldY * sizeCell)}px) rotate(${rotate}deg);`;
+  }
 
   const styles = [
     `.s{ 
       shape-rendering:geometricPrecision;
       fill:var(--cs);
-      animation: none linear ${duration}ms infinite
+      animation: none linear ${duration}ms infinite;
     }`,
-
     ...snakeParts.map((positions, i) => {
+      console.log(positions);
       const id = `s${i}`;
       const animationName = id;
 
+      interface PKeys {
+        x: number,
+        y: number,
+        i: number,
+        t: number
+      }
+      let p2 = removeInterpolatedPositions(
+        positions.map((tr, i, { length }) =>
+          ({ ...tr, t: i / length, i }))
+      ).map((p) => <PKeys>{
+        x: p.x,
+        y: p.y,
+        i: p.i,
+        t: p.t
+      });
+
       return [
-        `@keyframes ${animationName} {` +
+        `@keyframes ${animationName} { ` +
         removeInterpolatedPositions(
-          positions.map((tr, i, { length }) => ({ ...tr, t: i / length }))
+          positions.map((tr, i, { length }) =>
+            ({ ...tr, t: i / length, i }))
         )
-          .map((p) => `${percent(p.t)}%{${transform(p)}}`)
+          .map((p, i) => {
+            var pi = i + 1;
+
+            if (pi === (p2.length)) {
+              pi = 0;
+
+            }
+
+            var valuePer = (p.t) - (p.t * 0.001);
+
+            if (i === 0) {
+              if (p.x > p2[pi].x && p.y === p2[pi].y) {
+                rotate = -180;
+              } else if (p.x === p2[pi].x && p.y > p2[pi].y) {
+                rotate = -90;
+              } else if (p.x === p2[pi].x && p.y < p2[pi].y) {
+                rotate = -270;
+              }
+
+              return `${percent(p.t)}%{${transform(p, p2[pi].x, p2[pi].y)}}`;
+            } else {
+
+              return `${percent(valuePer)}%{${transform(p, p2[pi].x, p2[pi].y)}}
+                      ${percent(p.t)}%{${transformR(p, p2[pi].x, p2[pi].y)}}`;
+            }
+          })
           .join("") +
         "}",
 
-        `.s.${id}{${transform(positions[0])};animation-name: ${animationName}}`,
+        `.s.${id}{${transform(positions[0], positions[0].x, positions[0].y)};animation-name: ${animationName}}`,
       ];
     }),
   ].flat();
-
   return { svgElements, styles };
 };
 
